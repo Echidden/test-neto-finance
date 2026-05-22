@@ -1,7 +1,7 @@
 """
-Bug_01: Поле «Номер карты» принимает номер, начинающийся с 0
-Ожидание: поле суммы не появляется
-Факт: поле суммы появляется, перевод возможен
+Bug_01: Поле «Номер карты» не должно принимать номер, начинающийся с 0
+Ожидание: поле НЕ должно вводить 0 как первую цифру
+Факт: 0 вводится, номер принимается как валидный
 """
 
 from selenium.webdriver.common.by import By
@@ -19,20 +19,17 @@ def test_card_number_with_leading_zero_should_be_invalid(driver):
     )
     rub_card.click()
     
-    # Ввод номера карты с 0 в начале
+    # Поле ввода номера карты
     card_input = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='0000 0000 0000 0000']"))
     )
+    
+    # Вводим номер с 0 в начале
     card_input.send_keys("0123012301230123")
     
-    # Проверяем, появился ли элемент с комиссией (более надёжно)
-    try:
-        # Ищем любой элемент, который появляется после ввода карты
-        commission_element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Сумма перевода')]"))
-        )
-        # Если нашли — это баг
-        assert False, "BUG_01: Появился элемент 'Сумма перевода' при номере карты с 0 в начале"
-    except:
-        # Если ничего не нашли — всё правильно
-        pass
+    # Проверяем реальное значение в поле
+    actual_value = card_input.get_attribute("value")
+    
+    # Баг: если первая цифра 0 — тест падает
+    assert not actual_value.startswith("0"), \
+        f"BUG_01: Поле номера карты начинается с 0 ('{actual_value[:1]}'), что недопустимо"
