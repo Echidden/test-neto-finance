@@ -28,11 +28,11 @@ def test_card_number_with_leading_zero_should_be_invalid(driver):
     # Проверяем, появился ли элемент с комиссией (более надёжно)
     try:
         # Ищем любой элемент, который появляется после ввода карты
-        commission_element = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Комиссия')]"))
+        commission_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Сумма перевода')]"))
         )
         # Если нашли — это баг
-        assert False, "BUG_01: Появился элемент 'Комиссия' при номере карты с 0 в начале"
+        assert False, "BUG_01: Появился элемент 'Сумма перевода' при номере карты с 0 в начале"
     except:
         # Если ничего не нашли — всё правильно
         pass
