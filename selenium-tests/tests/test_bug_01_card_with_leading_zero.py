@@ -27,7 +27,7 @@ def test_card_number_with_leading_zero_should_be_invalid(driver):
     
     # Поле суммы НЕ должно появиться 
     try:
-        amount_input = WebDriverWait(driver, 3).until(
+        amount_input = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='1000']"))
         )
         # Если поле появилось — это баг
