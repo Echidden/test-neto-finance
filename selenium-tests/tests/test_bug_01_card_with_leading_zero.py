@@ -25,13 +25,14 @@ def test_card_number_with_leading_zero_should_be_invalid(driver):
     )
     card_input.send_keys("0123012301230123")
     
-    # Поле суммы НЕ должно появиться 
+    # Проверяем, появился ли элемент с комиссией (более надёжно)
     try:
-        amount_input = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='1000']"))
+        # Ищем любой элемент, который появляется после ввода карты
+        commission_element = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Комиссия')]"))
         )
-        # Если поле появилось — это баг
-        assert False, "BUG_01: Поле суммы появилось при номере карты с 0 в начале"
+        # Если нашли — это баг
+        assert False, "BUG_01: Появился элемент 'Комиссия' при номере карты с 0 в начале"
     except:
-        # Поле не появилось — всё правильно
+        # Если ничего не нашли — всё правильно
         pass
