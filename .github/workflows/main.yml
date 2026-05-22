@@ -37,4 +37,4 @@ jobs:
       if: always()
       with:
         name: test-report
-        path: selenium-tests/report.html
+        path: report.html
