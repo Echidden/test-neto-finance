@@ -23,13 +23,18 @@ jobs:
       run: |
         pip install -r selenium-tests/requirements.txt
     
+    - name: Start web server
+      run: |
+        python -m http.server 8000 --directory selenium-tests/.. &
+        sleep 3  # ждём, пока сервер поднимется
+    
     - name: Run tests
       run: |
-        pytest
+        pytest selenium-tests/tests/
     
     - name: Upload test report
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-report
-        path: report.html
+        path: selenium-tests/report.html
